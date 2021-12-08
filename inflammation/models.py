@@ -75,6 +75,15 @@ def attach_names(data, names):
     return output
 
 
+class Observation:
+    def __init__(self, day, value):
+        self.day = day
+        self.value = value
+
+    def __str__(self):
+        return str(self.value)
+
+
 class Patient:
     """A patient in an inflammation study."""
     def __init__(self, name):
@@ -84,16 +93,12 @@ class Patient:
     def add_observation(self, value, day=None):
         if day is None:
             try:
-                day = self.observations[-1]['day'] + 1
+                day = self.observations[-1].day + 1
 
             except IndexError:
                 day = 0
 
-
-        new_observation = {
-            'day': day,
-            'value': value,
-        }
+        new_observation = Observation(day, value)
 
         self.observations.append(new_observation)
         return new_observation
