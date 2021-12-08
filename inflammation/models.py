@@ -61,6 +61,49 @@ def patient_normalise(data):
     normalised[np.isnan(normalised)] = 0
     normalised[normalised < 0] = 0
     return normalised
+
+
+def attach_names(data, names):
+    """Create datastructure containing patient records."""
+    assert len(data) == len(names)
+    output = []
+
+    for data_row, name in zip(data, names):
+        output.append({'name': name,
+                       'data': data_row})
+
+    return output
+
+
+class Patient:
+    """A patient in an inflammation study."""
+    def __init__(self, name):
+        self.name = name
+        self.observations = []
+
+    def add_observation(self, value, day=None):
+        if day is None:
+            try:
+                day = self.observations[-1]['day'] + 1
+
+            except IndexError:
+                day = 0
+
+
+        new_observation = {
+            'day': day,
+            'value': value,
+        }
+
+        self.observations.append(new_observation)
+        return new_observation
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def last_observation(self):
+        return self.observations[-1]
 # TODO(lesson-design) Add Patient class
 # TODO(lesson-design) Implement data persistence
 # TODO(lesson-design) Add Doctor class
