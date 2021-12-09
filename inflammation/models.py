@@ -81,14 +81,30 @@ class Observation:
         self.value = value
 
     def __str__(self):
-        return str(self.value)
+        return self.value
 
-
-class Patient:
-    """A patient in an inflammation study."""
+class Person:
     def __init__(self, name):
         self.name = name
+
+    def __str__(self):
+        return self.name
+
+
+class Doctor:
+    def __init__(self, name, patients):
+        self.name = name
+        self.patients = Patient()  # Complete later: need a list of patients w/Patient class somehow?
+
+
+class Patient(Person):
+    """A patient in an inflammation study."""
+    def __init__(self, name, observations=None):
+        super().__init__(name)
+
         self.observations = []
+        if observations is not None:
+            self.observations = observations
 
     def add_observation(self, value, day=None):
         if day is None:
@@ -98,17 +114,10 @@ class Patient:
             except IndexError:
                 day = 0
 
-        new_observation = Observation(day, value)
+        new_observation = Observation(value, day)
 
         self.observations.append(new_observation)
         return new_observation
-
-    def __str__(self):
-        return self.name
-
-    @property
-    def last_observation(self):
-        return self.observations[-1]
 # TODO(lesson-design) Add Patient class
 # TODO(lesson-design) Implement data persistence
 # TODO(lesson-design) Add Doctor class

@@ -3,6 +3,7 @@
 import numpy as np
 import numpy.testing as npt
 import pytest
+import unittest
 
 
 @pytest.mark.parametrize(
@@ -122,4 +123,18 @@ def test_patient_normalise(test, expected, raises):
             npt.assert_almost_equal(patient_normalise(np.array(test)), np.array(expected), decimal=2)
     else:
         npt.assert_almost_equal(patient_normalise(np.array(test)), np.array(expected), decimal=2)
+
+
+class RandomTest(unittest.TestCase):
+    def test_random_numpy(self):
+        mean = 5
+        stdev = 3
+        N = 1000000
+
+        sample = np.random.normal(mean, stdev, N)
+
+        self.assertAlmostEqual(mean, np.mean(sample), places=1)
+        self.assertAlmostEqual(stdev, np.std(sample), places=1)
+
+
 # TODO(lesson-robust) Implement tests for the other statistical functions
