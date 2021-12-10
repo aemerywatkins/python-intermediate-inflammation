@@ -14,27 +14,34 @@ def main(args):
     - passing data between models and views
     """
     infiles = args.infiles
-    if not isinstance(infiles, list):
-        infiles = [args.infiles]
+    if infiles != None:
+        if not isinstance(infiles, list):
+            infiles = [args.infiles]
 
-    for filename in infiles:
-        inflammation_data = models.load_csv(filename)
+        for filename in infiles:
+            inflammation_data = models.load_csv(filename)
 
-        if args.view == 'visualize':
-            view_data = {
-                'average': models.daily_mean(inflammation_data),
-                'max': models.daily_max(inflammation_data),
-                'min': models.daily_min(inflammation_data),
-            }
+            if args.view == 'visualize':
+                view_data = {
+                    'average': models.daily_mean(inflammation_data),
+                    'max': models.daily_max(inflammation_data),
+                    'min': models.daily_min(inflammation_data),
+                }
 
-            views.visualize(view_data)
+                views.visualize(view_data)
 
-        elif args.view == 'record':
-            patient_data = inflammation_data[args.patient]
-            observations = [models.Observation(day, value) for day, value in enumerate(patient_data)]
-            patient = models.Patient('UNKNOWN', observations)
+            elif args.view == 'record':
+                patient_data = inflammation_data[args.patient]
+                observations = [models.Observation(day, value) for day, value in enumerate(patient_data)]
+                patient = models.Patient('UNKNOWN', observations)
 
-            views.display_patient_record(patient)
+                views.display_patient_record(patient)
+
+    elif (args.json_path != None) & (args.patient_name != None):
+        try:
+            views.display_patient_record_json(args.json_path, args.patient_name)
+        except:
+            print('Either the path or the patient name is wrong.')
 
 
 if __name__ == "__main__":
@@ -42,7 +49,7 @@ if __name__ == "__main__":
         description='A basic patient data management system')
 
     parser.add_argument(
-        'infiles',
+        '--infiles',
         nargs='+',
         help='Input CSV(s) containing inflammation series for each patient')
 
@@ -57,6 +64,20 @@ if __name__ == "__main__":
         type=int,
         default=0,
         help='Which patient should be displayed?')
+
+    parser.add_argument(
+        '--json_path',
+        type=str,
+        default='tests/patient.json',
+        help='Provide path to specific patient file (.json)',
+    )
+
+    parser.add_argument(
+        '--patient_name',
+        type=str,
+        default=None,
+        help='Provide the patient name, e.g., Alice'
+    )
 
     args = parser.parse_args()
 

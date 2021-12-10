@@ -1,4 +1,5 @@
 from inflammation import models, serializers
+import pytest
 
 def test_patients_json_serializer():
     # Create some test data
@@ -19,4 +20,16 @@ def test_patients_json_serializer():
         for obs_new, obs in zip(patient_new.observations, patient.observations):
             assert obs_new.day == obs.day
             assert obs_new.value == obs.value
-            
+
+@pytest.mark.parametrize(
+    "input_names",
+    [
+        ('Alice'),
+        ('Bob'),
+    ])
+def test_display_record_json(input_names):
+    from inflammation import views
+    path = 'patients.json'
+    record = views.display_patient_record_json(path, input_names)
+    assert record.name == input_names
+

@@ -83,18 +83,13 @@ class Observation:
     def __str__(self):
         return self.value
 
+
 class Person:
     def __init__(self, name):
         self.name = name
 
     def __str__(self):
         return self.name
-
-
-class Doctor:
-    def __init__(self, name, patients):
-        self.name = name
-        self.patients = Patient()  # Complete later: need a list of patients w/Patient class somehow?
 
 
 class Patient(Person):
@@ -118,6 +113,18 @@ class Patient(Person):
 
         self.observations.append(new_observation)
         return new_observation
+
+
+class Doctor(Patient):
+    def __init__(self, name, patient_names):
+        self.name = name
+        self.patient_names = patient_names
+
+    def add_patient_data(self):
+        new_patients = [Patient(i) for i in self.patient_names]
+        return new_patients  # This isn't probably very useful, but I'm tired and confused.
+
+
 # TODO(lesson-design) Add Patient class
 # TODO(lesson-design) Implement data persistence
 # TODO(lesson-design) Add Doctor class
